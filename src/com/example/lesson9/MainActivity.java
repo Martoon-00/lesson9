@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     TextView countryName;
     TextView tempNow;
     TextView pressureNow;
-    ImageView weatherIcon;
+    ImageView weatherIconView;
 
     TextView[] tempTexts;
     ImageView[] weatherIconViews;
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
         countryName = (TextView) findViewById(R.id.countryNameText);
         tempNow = (TextView) findViewById(R.id.tempNowText);
         pressureNow = (TextView) findViewById(R.id.pressureNowText);
-        weatherIcon = (ImageView) findViewById(R.id.weatherIconView);
+        weatherIconView = (ImageView) findViewById(R.id.weatherIconView);
 
         tempTexts = new TextView[]{
                 (TextView) findViewById(R.id.temp1Text),
@@ -197,11 +197,17 @@ public class MainActivity extends Activity {
 
     void updateIcon(int day){
         Bitmap pic = weatherIcons.get(day);
+        int size;
+        ImageView curIcon;
         if (day == 0){
-            weatherIcon.setImageBitmap(Bitmap.createScaledBitmap(pic, (int) Math.round(pic.getWidth() * 1.8), (int) Math.round(pic.getHeight() * 1.8), false));
+            curIcon = weatherIconView;
+            size = Math.max(curIcon.getWidth(), curIcon.getHeight());
         } else {
-            weatherIconViews[day - 1].setImageBitmap(Bitmap.createScaledBitmap(pic, (int) Math.round(pic.getWidth() * 1.1), (int) Math.round(pic.getHeight() * 1.1), false));
+            curIcon = weatherIconViews[day - 1];
+            size = curIcon.getHeight();
         }
+
+        curIcon.setImageBitmap(Bitmap.createScaledBitmap(pic, size, size, false));
 
     }
 
@@ -212,7 +218,7 @@ public class MainActivity extends Activity {
         pressureNow.setText(Math.round(Integer.parseInt(weathers.get(0).param[WeatherCond.PRESURE_NOW]) * 0.72) + " mm Hg");
 
         for (int i = 0; i < weatherIconViews.length; i++){
-            tempTexts[i].setText(weathers.get(i + 1).param[WeatherCond.TEMP_NOW] + "°C");
+            tempTexts[i].setText(weathers.get(i + 1).param[WeatherCond.TEMP_MIN] + "°C" + "   -   " + weathers.get(i + 1).param[WeatherCond.TEMP_MAX] + "°C");
         }
 
     }
