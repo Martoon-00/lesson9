@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -29,27 +30,30 @@ public class IconLoader extends IntentService {
 
     }
 
-    static String a;
     @Override
     protected void onHandleIntent(Intent intent) {
 
         String url = intent.getStringExtra("url");
+        int number = intent.getExtras().getInt("number");
 
         Intent intentResponse = new Intent();
         intentResponse.setAction(MainActivity.ACTION_response);
         intentResponse.addCategory(Intent.CATEGORY_DEFAULT);
 
         try {
-            //Bitmap pic = grabImageFromUrl(url);
+            Bitmap pic = grabImageFromUrl(url);
 
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            pic.compress(Bitmap.CompressFormat.PNG, 0, bos);
+            intentResponse.putExtra("data", bos.toByteArray());
 
         } catch (Exception ex){
             Log.w(TAG, ex.getMessage());
             intentResponse.putExtra(LOADING_ERROR, true);
         }
-        intent.putExtra("type", MainActivity.ICON_LOAD);
-        //sendBroadcast(intentResponse);
-        a = "";
+        intentResponse.putExtra("type", MainActivity.ICON_LOAD);
+        intentResponse.putExtra("number", number);
+        sendBroadcast(intentResponse);
 
     }
 

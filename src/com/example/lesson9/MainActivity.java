@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +32,7 @@ public class MainActivity extends Activity {
     MyBroadcastReceiver myBroadcastReceiver;
     ArrayList<Location> locations = new ArrayList<Location>();
     ArrayList<WeatherCond> weathers = new ArrayList<WeatherCond>();
+    ArrayList<Bitmap> weatherIcons = new ArrayList<Bitmap>();
     boolean isTownListChanged = true;
     int curTown = -1;
     boolean firstShow = true;
@@ -39,8 +42,10 @@ public class MainActivity extends Activity {
     TextView countryName;
     TextView tempNow;
     TextView pressureNow;
-    ImageView tempIcon;
+    ImageView weatherIcon;
 
+    TextView[] tempTexts;
+    ImageView[] weatherIconViews;
 
 
     @Override
@@ -78,7 +83,18 @@ public class MainActivity extends Activity {
         countryName = (TextView) findViewById(R.id.countryNameText);
         tempNow = (TextView) findViewById(R.id.tempNowText);
         pressureNow = (TextView) findViewById(R.id.pressureNowText);
-        tempIcon = (ImageView) findViewById(R.id.tempIconView);
+        weatherIcon = (ImageView) findViewById(R.id.weatherIconView);
+
+        tempTexts = new TextView[]{
+                (TextView) findViewById(R.id.temp1Text),
+                (TextView) findViewById(R.id.temp2Text),
+                (TextView) findViewById(R.id.temp3Text)
+        };
+        weatherIconViews = new ImageView[]{
+                (ImageView) findViewById(R.id.icon1View),
+                (ImageView) findViewById(R.id.icon2View),
+                (ImageView) findViewById(R.id.icon3View)
+        };
 
         // service response catching
         myBroadcastReceiver = new MyBroadcastReceiver();
@@ -142,15 +158,17 @@ public class MainActivity extends Activity {
                     WeatherCond w = new WeatherCond(t);
                     w.param = a;
                     weathers.add(w);
+                    weatherIcons.add(Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888));
                     Intent iconServiceIntent = new Intent(MainActivity.this, IconLoader.class);
-                    startService(iconServiceIntent.putExtra("url", w.param[w.ICON_URL]));
+                    startService(iconServiceIntent.putExtra("url", w.param[w.ICON_URL]).putExtra("number", i));
 
                 }
                 showWeather();
             } else if (type == ICON_LOAD){
-                weathers.add(new WeatherCond(false));
-
-
+                byte[] data = intent.getByteArrayExtra("data");
+                int number = intent.getExtras().getInt("number");
+                weatherIcons.set(number, BitmapFactory.decodeByteArray(data, 0, data.length));
+                updateIcon(number);
             }
             else {
                 Log.e("MainActivity", "Unrigistered broadcast");
@@ -177,13 +195,25 @@ public class MainActivity extends Activity {
         startService(updateServiceIntent.putExtra("url", createWeatherRequest(locations.get(curTown), 3)));
     }
 
+    void updateIcon(int day){
+        Bitmap pic = weatherIcons.get(day);
+        if (day == 0){
+            weatherIcon.setImageBitmap(Bitmap.createScaledBitmap(pic, (int) Math.round(pic.getWidth() * 1.8), (int) Math.round(pic.getHeight() * 1.8), false));
+        } else {
+            weatherIconViews[day - 1].setImageBitmap(Bitmap.createScaledBitmap(pic, (int) Math.round(pic.getWidth() * 1.1), (int) Math.round(pic.getHeight() * 1.1), false));
+        }
+
+    }
+
     void showWeather(){
         townName.setText(locations.get(curTown).param[Location.TOWN]);
         countryName.setText(locations.get(curTown).param[Location.COUNTRY]);
         tempNow.setText(weathers.get(0).param[WeatherCond.TEMP_NOW] + "°C");
         pressureNow.setText(Math.round(Integer.parseInt(weathers.get(0).param[WeatherCond.PRESURE_NOW]) * 0.72) + " mm Hg");
-        //tempIconView
 
+        for (int i = 0; i < weatherIconViews.length; i++){
+            tempTexts[i].setText(weathers.get(i + 1).param[WeatherCond.TEMP_NOW] + "°C");
+        }
 
     }
 
