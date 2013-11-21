@@ -17,7 +17,7 @@
                 android:id="@+id/townNameText"
                 android:layout_gravity="center"
                 android:textSize="40dp"
-                android:text="Sanct-Peterburg"/>
+                />
 
         <TextView
                 android:layout_width="wrap_content"
@@ -25,7 +25,6 @@
                 android:id="@+id/countryNameText"
                 android:layout_gravity="center"
                 android:textSize="25dp"
-                android:text="Africa"
                 android:textColor="#777777"/>
 
         <LinearLayout
@@ -45,7 +44,7 @@
                         android:id="@+id/tempNowText"
                         android:textSize="70dp"
                         android:layout_gravity="center"
-                        android:text="4 C"/>
+                        />
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -53,7 +52,6 @@
                         android:id="@+id/pressureNowText"
                         android:layout_gravity="center"
                         android:textSize="25dp"
-                        android:text="720 mm Hg"
                         android:textColor="#AAAAAA"/>
             </LinearLayout>
 
@@ -87,7 +85,7 @@
                     android:id="@+id/temp1Text"
                     android:layout_weight="1"
                     android:textSize="35dp"
-                    android:text="4 C - 6 C"/>
+                    />
 
             <ImageView
                     android:layout_width="wrap_content"
@@ -118,7 +116,6 @@
                     android:id="@+id/temp2Text"
                     android:layout_weight="1"
                     android:textSize="35dp"
-                    android:text="5 C - 7 C"
                     />
 
             <ImageView
@@ -151,7 +148,6 @@
                     android:id="@+id/temp3Text"
                     android:layout_weight="1"
                     android:textSize="35dp"
-                    android:text="6 C - 8 C"
                     />
 
             <ImageView
