@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="Tomorrow"
                 android:id="@+id/textView"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginLeft="10dp"
                 android:textSize="20dp"/>
 
@@ -101,7 +101,8 @@
                 android:text="2 days forward"
                 android:id="@+id/textView"
                 android:layout_marginLeft="10dp"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:layout_marginTop="30dp"/>
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -132,7 +133,8 @@
                 android:text="3 days forward"
                 android:id="@+id/textView"
                 android:layout_marginLeft="10dp"
-                android:textSize="20dp"/>
+                android:textSize="20dp"
+                android:layout_marginTop="30dp"/>
 
         <LinearLayout
                 android:orientation="horizontal"
